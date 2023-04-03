@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Snowball Warrior</title>
+    <style>
+        body {
+            background-color: black;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        iframe {
+            border: none;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 5px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <iframe src="SnowballWarrior5.html" width="500" height="500"></iframe>
+    <div class="controls">
+        <button id="left"><---</button>        
+        <button id="right">---></button>
+	<button id="up">Jump</button>
+        <button id="space">Throw</button>
+    </div>
+    <script>
+        const iframe = document.querySelector('iframe');
+        const iframeWindow = iframe.contentWindow;
+    function simulateKeydown(keyCode) {
+        const event = new KeyboardEvent('keydown', { keyCode: keyCode, bubbles: true });
+        iframeWindow.dispatchEvent(event);
+    }
+
+    function simulateKeyup(keyCode) {
+        const event = new KeyboardEvent('keyup', { keyCode: keyCode, bubbles: true });
+        iframeWindow.dispatchEvent(event);
+    }
+
+    document.getElementById('left').addEventListener('touchstart', () => simulateKeydown(37));
+    document.getElementById('left').addEventListener('touchend', () => simulateKeyup(37));
+    document.getElementById('right').addEventListener('touchstart', () => simulateKeydown(39));
+    document.getElementById('right').addEventListener('touchend', () => simulateKeyup(39));
+    document.getElementById('up').addEventListener('touchstart', () => simulateKeydown(38));
+    document.getElementById('space').addEventListener('touchstart', () => simulateKeydown(32));
+</script>
+
+</body>
+</html>

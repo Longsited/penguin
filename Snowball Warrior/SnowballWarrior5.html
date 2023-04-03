@@ -1,0 +1,148 @@
+        <!DOCTYPE html>
+<html>
+<head>
+    <title>Penguin Game</title>
+    <style>
+        body {
+            background-color: lightblue;
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas" width="500" height="500"></canvas>
+
+    <script>
+        // Load penguin image
+        var penguin = new Image();
+        penguin.src = "penguin.jpg";
+
+        // Load snowball image
+        var snowballImg = new Image();
+        snowballImg.src = "snowball.jpg";
+
+        // Snowball class
+        class Snowball {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.xSpeed = 7;
+                this.ySpeed = -7;
+                this.gravity = 0.3;
+            }
+
+            update() {
+                this.x += this.xSpeed;
+                this.y += this.ySpeed;
+                this.ySpeed += this.gravity;
+            }
+
+            draw() {
+                ctx.drawImage(snowballImg, this.x, this.y);
+            }
+        }
+
+        var snowballs = [];
+
+        // Set initial position of penguin
+        var xPos = 50;
+        var yPos = 50;
+
+        // Set speed of penguin
+        var xSpeed = 0;
+        var ySpeed = 0;
+
+        // Set gravity and jump strength
+        var gravity = 0.5;
+        var jumpStrength = -10;
+
+        // Set up canvas
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+
+        // Update penguin position and draw on canvas
+        function update() {
+            // Apply gravity
+            ySpeed += gravity;
+
+            // Update x position based on speed
+            xPos += xSpeed;
+
+            // Update y position based on speed
+            yPos += ySpeed;
+
+            // Check if penguin is touching bottom of canvas
+            if (yPos + penguin.height >= canvas.height) {
+                // Set position to bottom of canvas and stop falling
+                yPos = canvas.height - penguin.height;
+                ySpeed = 0;
+            }
+
+            // Check if penguin is touching top of canvas
+            if (yPos <= 0) {
+                // Set position to top of canvas and stop jumping
+                yPos = 0;
+                ySpeed = 0;
+            }
+
+            // Check if penguin is touching left or right of canvas
+            if (xPos <= 0 || xPos + penguin.width >= canvas.width) {
+                // Reverse direction of penguin
+                xSpeed = -xSpeed;
+            }
+
+            // Draw penguin image on canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(penguin, xPos, yPos);
+
+            // Update and draw snowballs
+            for (var i = 0; i < snowballs.length; i++) {
+                snowballs[i].update();
+                snowballs[i].draw();
+
+                // Remove snowball if it goes off the canvas
+                if (snowballs[i].x > canvas.width || snowballs[i].y > canvas.height) {
+                    snowballs.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+
+        // Update penguin position and throw snowball on key press
+        document.addEventListener("keydown", function(event) {
+            switch(event.keyCode) {
+                case 37: // Left arrow key                      
+	xSpeed = -5;
+            break;
+        case 39: // Right arrow key
+            xSpeed = 5;
+            break;
+        case 32: // Spacebar
+            // Create and throw a new snowball on a parabolic curve
+            snowballs.push(new Snowball(xPos + penguin.width, yPos + penguin.height / 2));
+            break;
+        case 38: // Up arrow key
+            // Apply jump strength
+            ySpeed = jumpStrength;
+            break;
+    }
+});
+
+// Stop updating penguin position on arrow key release
+document.addEventListener("keyup", function(event) {
+    if (event.keyCode == 37 || event.keyCode == 39) {
+        xSpeed = 0;
+    }
+});
+
+// Update penguin position and snowballs every 20 milliseconds
+setInterval(update, 20);
+    </script>
+
+</body>
+</html>
